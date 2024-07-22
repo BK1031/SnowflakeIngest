@@ -17,7 +17,7 @@ resorts = ["Vail", "Beaver Creek", "Breckenridge", "Keystone", "Crested Butte", 
            "Hidden Valley", "Snow Creek", "Wilmot", "Afton Alps" , "Mt. Brighton", "Paoli Peaks"]    
 
 
-def print_lift_ticket():
+def generate_lift_ticket():
     global resorts, fake
     state = fake.state_abbr()
     lift_ticket = {'txid': str(uuid.uuid4()),
@@ -33,13 +33,19 @@ def print_lift_ticket():
                    'phone': fake.optional(fake.phone_number()),
                    'email': fake.optional(fake.email()),
                    'emergency_contact' : fake.optional({'name': fake.name(), 'phone': fake.phone_number()}),
+                   'sent_at': datetime.utcnow().isoformat()
     }
-    d = json.dumps(lift_ticket) + '\n'
-    sys.stdout.write(d)
+    return lift_ticket
 
+def generate_lift_tickets(count):
+    return [generate_lift_ticket() for _ in range(count)]
+
+def print_lift_tickets(count):
+    for ticket in generate_lift_tickets(count):
+        d = json.dumps(ticket) + '\n'
+        sys.stdout.write(d)
 
 if __name__ == "__main__":
     args = sys.argv[1:]
     total_count = int(args[0])
-    for _ in range(total_count):
-        print_lift_ticket()
+    print_lift_tickets(total_count)

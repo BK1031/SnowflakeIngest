@@ -7,7 +7,7 @@ def print_results(snow, n):
         TIMEDIFF(millisecond, SENT_AT, CREATED_AT) as latency_ms,
         SENT_AT,
         CREATED_AT
-    FROM LIFT_TICKETS_PY_INSERT
+    FROM LIFT_TICKETS
     ORDER BY CREATED_AT DESC
     LIMIT ?
     """
@@ -35,9 +35,9 @@ def print_results(snow, n):
     print("+-----------------------+---------------+")
     print("| Metric                | Latency (ms)  |")
     print("+-----------------------+---------------+")
-    print(f"| Average latency       | {avg_latency:13.2f} |")
-    print(f"| Minimum latency       | {min_latency:13.2f} |")
-    print(f"| Maximum latency       | {max_latency:13.2f} |")
-    print(f"| 95th percentile       | {p95:13.2f} |")
-    print(f"| 99th percentile       | {p99:13.2f} |")
+    print(f"| Average latency       | {float(avg_latency):13.2f} |")
+    print(f"| Minimum latency       | {float(min_latency):13.2f} |")
+    print(f"| Maximum latency       | {float(max_latency):13.2f} |")
+    print(f"| 95th percentile       | {float(p95):13.2f} |")
+    print(f"| 99th percentile       | {float(p99):13.2f} |")
     print("+-----------------------+---------------+")

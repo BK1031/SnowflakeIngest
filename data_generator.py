@@ -33,12 +33,22 @@ def generate_lift_ticket():
                    'phone': fake.optional(fake.phone_number()),
                    'email': fake.optional(fake.email()),
                    'emergency_contact' : fake.optional({'name': fake.name(), 'phone': fake.phone_number()}),
-                   'sent_at': datetime.utcnow().isoformat()
+                   'sent_at': datetime.utcnow().isoformat(),
+                   'created_at': None
     }
     return lift_ticket
 
 def generate_lift_tickets(count):
-    return [generate_lift_ticket() for _ in range(count)]
+    start_time = datetime.now()
+    sent_updates = []
+    tickets = []
+    for i in range(count):
+        tickets.append(generate_lift_ticket())
+        elapsed_time = (datetime.now() - start_time).total_seconds()
+        if elapsed_time > 10 and int(elapsed_time) % 5 == 0 and int(elapsed_time) not in sent_updates:
+            print(f"Generated {i+1} tickets. Elapsed time: {elapsed_time} seconds")
+            sent_updates.append(int(elapsed_time))
+    return tickets
 
 def print_lift_tickets(count):
     for ticket in generate_lift_tickets(count):

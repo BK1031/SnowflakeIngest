@@ -1,6 +1,7 @@
 from datetime import datetime, time
 import os, sys, logging
 import json
+from init import init_sql
 import snowflake.connector
 from data_generator import generate_lift_tickets
 from results import print_results
@@ -44,7 +45,7 @@ def save_to_snowflake(snow, records):
         cursor = snow.cursor()
         record['sent_at'] = datetime.utcnow().isoformat()
         row = (record['txid'], record['rfid'], record["resort"], record["purchase_time"], record["expiration_time"], record['days'], record['name'], json.dumps(record['address']), record['phone'], record['email'], json.dumps(record['emergency_contact']), record['sent_at'])
-        cursor.execute("INSERT INTO LIFT_TICKETS_PY_INSERT (\"TXID\",\"RFID\",\"RESORT\",\"PURCHASE_TIME\", \"EXPIRATION_TIME\",\"DAYS\",\"NAME\",\"ADDRESS\",\"PHONE\",\"EMAIL\",\"EMERGENCY_CONTACT\",\"SENT_AT\") SELECT ?,?,?,?,?,?,?,PARSE_JSON(?),?,?,PARSE_JSON(?),?", row)
+        cursor.execute("INSERT INTO LIFT_TICKETS (\"TXID\",\"RFID\",\"RESORT\",\"PURCHASE_TIME\", \"EXPIRATION_TIME\",\"DAYS\",\"NAME\",\"ADDRESS\",\"PHONE\",\"EMAIL\",\"EMERGENCY_CONTACT\",\"SENT_AT\") SELECT ?,?,?,?,?,?,?,PARSE_JSON(?),?,?,PARSE_JSON(?),?", row)
         print(f"inserted ticket ({i}) {record['txid']}")
         cursor.close()
 
@@ -66,6 +67,7 @@ if __name__ == "__main__":
     fake_data = generate_lift_tickets(num_entries)
     
     snow = connect_snow()
+    init_sql(snow)
     save_to_snowflake(snow, fake_data)
     print_results(snow, num_entries)
     snow.close()

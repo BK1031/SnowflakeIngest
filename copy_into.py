@@ -38,7 +38,7 @@ def connect_snow():
         database="BHARAT_KAFKA",
         schema="PUBLIC",
         warehouse="BHARAT_INGEST",
-        session_parameters={'QUERY_TAG': 'py-insert'}, 
+        session_parameters={'QUERY_TAG': 'py-copy'}, 
     )
 
 def save_to_snowflake(snow, batch, temp_dir):

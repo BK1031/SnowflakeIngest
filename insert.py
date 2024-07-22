@@ -1,8 +1,7 @@
 from datetime import datetime, time
 import os, sys, logging
 import json
-from connect import connect_snow
-from init import init_sql
+from init import init_sql, connect_snow
 import snowflake.connector
 from data_generator import generate_lift_tickets
 from results import print_results

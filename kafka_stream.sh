@@ -1,6 +1,7 @@
 eval $(cat .env)
 
 URL="https://$SNOWFLAKE_ACCOUNT.snowflakecomputing.com"
+TOPIC="LIFT_TICKETS_KAFKA_STREAMING"
 NAME="LIFT_TICKETS_KAFKA_STREAMING"
 
 curl -i -X PUT -H "Content-Type:application/json" \
@@ -16,12 +17,12 @@ curl -i -X PUT -H "Content-Type:application/json" \
         "snowflake.user.name":"'$SNOWFLAKE_USER'",
         "snowflake.enable.schematization": "TRUE",
         "snowflake.ingestion.method": "SNOWPIPE_STREAMING",
-        "topics":"'$KAFKA_TOPIC'",
+        "topics":"'$TOPIC'",
         "name":"'$NAME'",
         "value.converter":"org.apache.kafka.connect.json.JsonConverter",
         "value.converter.schemas.enable":"false",
         "buffer.count.records":"1000000",
         "buffer.flush.time":"10",
         "buffer.size.bytes":"250000000",
-        "snowflake.topic2table.map":"'$KAFKA_TOPIC:LIFT_TICKETS_KAFKA_STREAMING'"
+        "snowflake.topic2table.map":"'$TOPIC:$NAME'"
     }'

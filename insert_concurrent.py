@@ -37,21 +37,28 @@ def connect_snow():
 
 
 def save_to_snowflake(snow, records):
-    start_time = datetime.now()    
-    cursor = snow.cursor()
-    for i, record in enumerate(records):
+    start_time = datetime.now()
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    
+    def insert_record(i, record):
+        cursor = snow.cursor()
         record['sent_at'] = datetime.utcnow().isoformat()
         row = (record['txid'], record['rfid'], record["resort"], record["purchase_time"], record["expiration_time"], record['days'], record['name'], json.dumps(record['address']), record['phone'], record['email'], json.dumps(record['emergency_contact']), record['sent_at'])
         cursor.execute("INSERT INTO LIFT_TICKETS_PY_INSERT (\"TXID\",\"RFID\",\"RESORT\",\"PURCHASE_TIME\", \"EXPIRATION_TIME\",\"DAYS\",\"NAME\",\"ADDRESS\",\"PHONE\",\"EMAIL\",\"EMERGENCY_CONTACT\",\"SENT_AT\") SELECT ?,?,?,?,?,?,?,PARSE_JSON(?),?,?,PARSE_JSON(?),?", row)
         print(f"inserted ticket ({i}) {record['txid']}")
-    
-    cursor.close()
+        cursor.close()
+
+    with ThreadPoolExecutor() as executor:
+        futures = [executor.submit(insert_record, i, record) for i, record in enumerate(records)]
+        as_completed(futures)
+
     snow.commit()
     print(f"\nInserted {len(records):,} records in {(datetime.now() - start_time).total_seconds() * 1000:.2f} ms")
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        print("Usage: python insert.py <number_of_entries>")
+        print("Usage: python insert_concurrent.py <number_of_entries>")
         sys.exit(1)
     
     num_entries = int(sys.argv[1])

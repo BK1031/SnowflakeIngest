@@ -59,7 +59,11 @@ def save_to_snowflake(snow, batch, temp_dir, ingest_manager):
     print(f"\nInserted {len(batch):,} records in {(datetime.now() - start_time).total_seconds() * 1000:.2f} ms")
 
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python snowpipe.py <number_of_entries>")
+        sys.exit(1)
+    
     args = sys.argv[1:]
     batch_size = int(args[0])
     snow = connect_snow()

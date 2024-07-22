@@ -74,6 +74,10 @@ def save_to_snowflake(snow, batch, temp_dir):
     print(f"\nInserted {len(batch):,} records in {(datetime.now() - start_time).total_seconds() * 1000:.2f} ms")
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python copy_into.py <number_of_entries>")
+        sys.exit(1)
+    
     args = sys.argv[1:]
     num_entries = int(args[0])
     snow = connect_snow()

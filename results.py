@@ -1,28 +1,6 @@
-import snowflake.connector
-
-def print_results(snow, n):
-    cursor = snow.cursor()
-    query = """
-    SELECT 
-        TIMEDIFF(millisecond, SENT_AT, CREATED_AT) as latency_ms,
-        SENT_AT,
-        CREATED_AT
-    FROM LIFT_TICKETS
-    ORDER BY CREATED_AT DESC
-    LIMIT ?
-    """
-    cursor.execute(query, (n,))
-    results = cursor.fetchall()
-    cursor.close()
-
-    if not results:
-        print("No results found.")
-        return
-
-    latencies = [row[0] for row in results if row[0] is not None]
-
+def print_results(latencies):
     if not latencies:
-        print("No valid latencies found.")
+        print("No results found.")
         return
 
     avg_latency = sum(latencies) / len(latencies)

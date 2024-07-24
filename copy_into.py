@@ -18,6 +18,11 @@ from cryptography.hazmat.primitives import serialization
 load_dotenv()
 logging.basicConfig(level=logging.WARN)
 
+num_entries = 1
+num_tests = 100
+
+latencies = []
+
 def save_to_snowflake(snow, batch, temp_dir):
     logging.debug("inserting batch to db")
     pandas_df = pd.DataFrame(
@@ -48,21 +53,13 @@ def save_to_snowflake(snow, batch, temp_dir):
     snow.cursor().execute(
         "COPY INTO LIFT_TICKETS FILE_FORMAT=(TYPE='PARQUET') MATCH_BY_COLUMN_NAME=CASE_SENSITIVE PURGE=TRUE"
     )
+    latencies.append((datetime.now() - start_time).total_seconds() * 1000)
     print(f"\nInserted {len(batch):,} records in {(datetime.now() - start_time).total_seconds() * 1000:.2f} ms")
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python copy_into.py <number_of_entries>")
-        sys.exit(1)
-    
-    args = sys.argv[1:]
-    num_entries = int(args[0])
+def run_test(fake_data):
     snow = connect_snow()
     init_sql(snow)
     temp_dir = tempfile.TemporaryDirectory()
-    
-    print(f"Generating {num_entries} fake lift tickets")
-    fake_data = generate_lift_tickets(num_entries)
     
     batch = []
     for record in fake_data:
@@ -87,3 +84,18 @@ if __name__ == "__main__":
     save_to_snowflake(snow, batch, temp_dir)
     temp_dir.cleanup()
     snow.close()
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: python copy_into.py <number_of_entries>")
+        sys.exit(1)
+    
+    args = sys.argv[1:]
+    num_entries = int(args[0])
+    print(f"Generating {num_entries} fake lift tickets")
+    fake_data = generate_lift_tickets(num_entries)
+
+    for i in range(num_tests):
+        print(f"\nRunning test {i+1} of {num_tests}")
+        run_test(fake_data)
+    print_results(latencies)

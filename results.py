@@ -10,6 +10,7 @@ def print_results(latencies):
     p95 = sorted(latencies)[int(len(latencies) * 0.95)]
     p99 = sorted(latencies)[int(len(latencies) * 0.99)]
     
+    print()
     print("+-----------------------+---------------+")
     print("| Metric                | Latency (ms)  |")
     print("+-----------------------+---------------+")
@@ -19,3 +20,4 @@ def print_results(latencies):
     print(f"| 95th percentile       | {float(p95):13.2f} |")
     print(f"| 99th percentile       | {float(p99):13.2f} |")
     print("+-----------------------+---------------+")
+    print()

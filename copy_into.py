@@ -19,7 +19,7 @@ load_dotenv()
 logging.basicConfig(level=logging.WARN)
 
 num_entries = 1
-num_tests = 100
+num_tests = 1
 
 latencies = []
 

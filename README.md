@@ -81,30 +81,30 @@ The next method is similar to the previous one as we are still batching rows int
 Again, there are two benchmarks for this method. The first one being sending 1,000 rows 100 times.
 
 ```
-Inserted 100 x 1,000 records in 194131.58 ms
+Inserted 100 x 1,000 records in 2094131.58 ms
 +-----------------------+---------------+
 | Metric                | Latency (ms)  |
 +-----------------------+---------------+
-| Average latency       |       20275.34 |
-| Minimum latency       |       15134.85 |
-| Maximum latency       |       33584.27 |
-| 95th percentile       |       24230.05 |
-| 99th percentile       |       33585.73 |
+| Average latency       |      21075.17 |
+| Minimum latency       |      14554.52 |
+| Maximum latency       |      35385.84 |
+| 95th percentile       |      21440.91 |
+| 99th percentile       |      34985.63 |
 +-----------------------+---------------+
 ```
 
 The second benchmark was sending 1,000,000 rows 100 times.
 
 ```
-Inserted 100 x 1,000,000 records in 3134059.94 ms
+Inserted 100 x 1,000,000 records in 29134059.94 ms
 +-----------------------+---------------+
 | Metric                | Latency (ms)  |
 +-----------------------+---------------+
-| Average latency       |      35991.24 |
-| Minimum latency       |      30350.38 |
-| Maximum latency       |      42507.33 |
-| 95th percentile       |      39438.99 |
-| 99th percentile       |      42507.33 |
+| Average latency       |     348991.14 |
+| Minimum latency       |     323350.72 |
+| Maximum latency       |     426197.45 |
+| 95th percentile       |     394328.83 |
+| 99th percentile       |     425197.58 |
 +-----------------------+---------------+
 ```
 

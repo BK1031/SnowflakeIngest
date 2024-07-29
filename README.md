@@ -1,6 +1,6 @@
 # Snowflake Ingestion Benchmarks
 
-Snowflake has a couple recommended methods for data ingestion. Below are a few quick benchmarks across the various methods. See `snowflake.sql` for the required setup like creating a database, schema, warehouse, user, and roles.
+Snowflake has a couple recommended methods for data ingestion. Below are a few quick benchmarks across the various methods. See `snowflake.sql` for the required setup like creating a database, schema, warehouse, user, and roles. All benchmarks were conducted using an `XS` warehouse (8 cores, 16GB RAM).
 
 ## SQL Insertion
 
